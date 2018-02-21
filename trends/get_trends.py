@@ -15,10 +15,10 @@ import re
 
 #Variables that contains the user credentials to access Twitter API # unmdscs4 Account
 #==================Add Twitter Authentication key==================
-access_token = "792415190805516289-RPsyCM24K4j6rgyw7TxhZJ5AJ9089Me"
-access_token_secret = "mWz3iShCO7X0wNTCGOe9VZXTuQqyKF9qAs6rc1r2lsgGO"
-consumer_key = "GefZR3duK7gNGKcycNAwKYhYS"
-consumer_secret = "6PVYp7dfKJ1nuc4daZFjsJhsvfI13s4UwVrxXDD964oVtuS3PS"
+access_token = ""
+access_token_secret = ""
+consumer_key = ""
+consumer_secret = ""
 
 
 API_file_name = sys.argv[1]

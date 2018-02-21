@@ -20,10 +20,10 @@ def load_from_file (f):
 #==================Add Twitter Authentication key==================
 
 #Variables that contains the user credentials to access Twitter API 
-access_token = "792412951747694592-Jew4MPikhq886od0mXRsyecosOHpHJq"
-access_token_secret = "hCWLjPNwvZ70u2nctJ8f538w9MLaHMCvePO0zVO3rpWSs"
-consumer_key = "UbQqu7k7nRdaBhQN0ddVR7oje"
-consumer_secret = "7MxFAAC4XejojlZsna9CsyOxaUkzV4BXwpJqlsunH26eoX2W51"
+access_token = ""
+access_token_secret = ""
+consumer_key = ""
+consumer_secret = ""
 
 # inputs from terminal
 input_file_name = sys.argv[1] +'.txt'

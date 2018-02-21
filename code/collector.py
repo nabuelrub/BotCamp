@@ -17,10 +17,10 @@ import time
 
 #Variables that contains the user credentials to access Twitter API 
 #==================Add Twitter Authentication key==================
-access_token = "897838834070601728-6oP20PXFwEdvVO9rdBj50U0xFSIAruQ"
-access_token_secret = "TqXTHBOqtn9AGbeJPRn1uyrovcFnUVKLII4ZH6thlSOaR"
-consumer_key = "zkNhgqgJ3Fx27h09JRkYGopOX"
-consumer_secret = "jxHa9pdgIMPjT5IxBh28xu7KV27kCMU9JGN5u1DgpNR4zs1MDa"
+access_token = ""
+access_token_secret = ""
+consumer_key = ""
+consumer_secret = ""
 
 
 itr = str(sys.argv[1])
