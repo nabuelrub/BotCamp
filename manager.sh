@@ -1,0 +1,168 @@
+#!/bin/bash
+
+#===========================CHANGE THE PATH=================================
+MYPWD=${PWD}
+path="$MYPWD/data/w${1}/Night_"
+night=1
+week=1
+cexp=1
+#30 minutes
+listen_time=1800
+#listen_time=300
+while [ "$night" -le "7" ]; do
+date1=$(date +"%s")
+date2=$(date +"%s")
+diff=$(($date2-$date1))
+hours=$(($diff / 3600))
+round=1
+night_path="$path$night"
+mkdir -p $night_path
+echo "$night_path" >> "$night_path/log.txt"
+while [ "$hours" -le "23" ]; do
+
+echo "$night_path/Round_$round"
+round_path="$night_path/Round_$round"
+mkdir -p $round_path
+echo "0" >> "$round_path/is_done"
+echo "0" >> "$round_path/new_tweet"
+echo "0" >> "$round_path/in_file"
+itr=1
+step=1
+
+#===========================CHANGE THE PATH=================================
+#& sign means the bash file is not waiting for the script to finish
+python $MYPWD/code/collector.py $itr $listen_time $round_path $MYPWD &
+
+col_id=$!
+echo "col_id $itr : $col_id"
+echo "col_id $itr : $col_id" >> "$night_path/log.txt"
+col_date1=$(date +"%s")
+col_date2=$(date +"%s")
+col_diff=$(($col_date2-$col_date1))
+sleep 10s
+is_done=$(cat "$round_path/is_done") 
+new_tweet=$(cat "$round_path/new_tweet")   
+col_wait_time=$(($listen_time+600))
+col_sleep_time=$((($listen_time/2)+10))
+while [ "$is_done" -eq "0" ]; do
+while [ "$new_tweet" -eq "0" ]; do
+if [ $col_diff -ge $col_wait_time ]
+then
+rm "$round_path/new_tweet"
+echo "1" >> "$round_path/new_tweet"
+rm "$round_path/in_file"
+echo "$itr" >> "$round_path/in_file"
+new_tweet=$(cat "$round_path/new_tweet")
+if (ps -p $col_id)
+then
+kill $col_id
+fi
+else
+echo "Wait Time for Collector!!!!"
+echo "Wait Time for Collector!!!!" >> "$night_path/log.txt"
+
+sleep $col_sleep_time
+new_tweet=$(cat "$round_path/new_tweet")
+fi
+col_date2=$(date +"%s")
+col_diff=$(($col_date2-$col_date1))
+done
+((itr++))
+
+#===========================CHANGE THE PATH=================================
+python $MYPWD/code/collector.py $itr $listen_time $round_path $MYPWD &
+
+col_id=$!
+col_date1=$(date +"%s")
+col_date2=$(date +"%s")
+col_diff=$(($col_date2-$col_date1))
+
+echo "col_id $itr : $col_id"
+echo "col_id $itr : $col_id" >> "$night_path/log.txt"
+
+sleep 5s
+#input file and step
+in_file=$(cat "$round_path/in_file")
+
+echo "in_file: $in_file"
+echo "step: $step"
+
+echo "in_file: $in_file" >> "$night_path/log.txt"
+echo "step: $step" >> "$night_path/log.txt"
+
+#===========================CHANGE THE PATH=================================
+python $MYPWD/code/hash.py $in_file $step $listen_time $round_path
+rm "$round_path/new_tweet"
+echo "0" >> "$round_path/new_tweet"
+((step++))
+
+is_done=$(cat "$round_path/is_done")
+new_tweet=$(cat "$round_path/new_tweet")
+done
+
+if (ps -p $col_id)
+then
+kill $col_id
+fi
+echo "Collector Finished!"
+echo "Collector Finished!" >> "$night_path/log.txt"
+
+((step--))
+input_file="$round_path/reported_user_$step"
+output_file="$round_path/reported_user_tweets"
+
+#===========================CHANGE THE PATH=================================
+python $MYPWD/code/user_listener.py $input_file $output_file $listen_time &
+lst_id=$!
+echo "lst_id: $lst_id"
+echo "lst_id: $lst_id" >> "$night_path/log.txt"
+
+lst_date1=$(date +"%s")
+lst_date2=$(date +"%s")
+lst_diff=$(($lst_date2-$lst_date1))
+
+lst_flag=0
+overall_lst_time=$(($listen_time*4+600))
+lst_sleep_time=$(($listen_time/2)) 
+while [ "$lst_flag" -eq 0 ]; do
+if [ "$lst_diff" -ge "$overall_lst_time" ]
+then
+lst_flag=1
+if (ps -p $lst_id)
+then
+kill $lst_id
+fi
+else
+sleep $lst_sleep_time
+fi
+lst_date2=$(date +"%s")
+lst_diff=$(($lst_date2-$lst_date1))
+done
+
+name_file="$round_path/w${week}_exp${cexp}_name"
+#echo $name_file
+tl_file="$round_path/exp_tl"
+
+#===========================CHANGE THE PATH=================================
+python $MYPWD/code/find_correlation.py $output_file $name_file $tl_file
+
+#===========================CHANGE THE PATH=================================
+matlab -nosplash -nodesktop -r "p = path; path(p,'$MYPWD/code');calDTW('$tl_file.txt','$round_path',20,$week,$cexp)"
+matlab -nosplash -nodesktop -r "p = path; path(p,'$MYPWD/code');get_cluster('$round_path',$week,$cexp)"
+
+#========================= Adding more keywords================================
+
+#End of one round
+((round++))
+((cexp++))
+echo "----------------------------"
+echo "----------------------------" >> "$night_path/log.txt"
+
+date2=$(date +"%s")
+diff=$(($date2-$date1))
+hours=$(($diff / 3600))
+
+done
+#End of night
+((night++))
+done

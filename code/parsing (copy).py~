@@ -1,0 +1,89 @@
+import csv
+import json
+import sys
+import io
+import codecs
+import re
+import fnmatch
+#import MySQLdb
+import os
+import datetime, time
+from pybloom import BloomFilter
+from collections import Counter
+
+
+
+#source = sys.argv[1]
+destination = sys.argv[1]
+
+def find_files(directory, pattern):
+	for root, dirs, files in os.walk(directory):
+		dirs.sort()
+		for basename in files:
+			if fnmatch.fnmatch(basename, pattern):
+				filename = os.path.join(root, basename)
+				yield filename
+
+count = 1
+typetwt = str(0)			
+visited = []
+#main_path = '/home/election/Election/Dynamic Listening/code/w1/' #copy the address of a directory that all w* data are there
+counter = 0
+s= "\t"
+hashtagf = codecs.open(destination+'/hashtags.txt','w',"utf-8")
+hashtag = []
+
+
+
+files = find_files(destination,'[1-5].txt')
+
+for f in files:
+	print 'reading',f
+	tweet_file = open(f,'r')
+	for line in tweet_file:
+		#if count >= 200:
+		#	break
+		try:
+			twt = json.loads(line)
+			#------------------example of extracting data from a tweet
+			if 'created_at' in twt:
+				if twt['entities']['hashtags'] :
+					#count=count+1
+					#print "not none",  "y"
+					hashes = twt['entities']['hashtags']
+					#print hashes
+					for i in hashes:
+						#print i['text']
+						hashtag.append(i['text'].lower())
+							#hashtags.write(i+'\n')
+		except:
+			print "Error parsing"
+			e=sys.exc_info()[0]
+			#print 
+			print e
+	tweet_file.close()
+
+c = Counter(hashtag)
+#print c.most_common()
+if len(c)< 74:
+	length = len(c)
+else:
+	length=74
+
+copyf = codecs.open('/home/election/Election/Dynamic/hashtags.txt','w')
+
+for i,j in c.most_common()[0:length]:
+	#print i
+	hashtagf.write(i+' '+str(j)+'\n')
+	try:
+		copyf.write(i+'\n')
+	except:
+		print "ignoring",str(i.encode('utf-8'))
+	
+
+						
+
+
+
+
+

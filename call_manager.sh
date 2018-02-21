@@ -1,0 +1,1 @@
+./manager.sh 1
