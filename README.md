@@ -6,3 +6,4 @@ Add them to the following files:
 2. code/user_listener.py
 3. trends/collector.py
 4. trends/get_trends.py
+
