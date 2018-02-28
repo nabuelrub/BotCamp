@@ -22,7 +22,7 @@ There are several dependencies:
 
 1. Add keywords for the topic you want find campaigns (keywords.txt)
 2. Place Twitter API keys in the four files
-3. Run BotsFinder\(Debot\).sh to start detecting [bots](http://www.cs.unm.edu/~chavoshi/debot/) using Debot tool
+3. Run BotsFinder\(Debot\).sh to start detecting bots using [Debot](http://www.cs.unm.edu/~chavoshi/debot/) tool
 4. Run keywords_generator.sh to add new keywords from the 50 trending hashtags
 5. After collecting data, run Campaign_Detector.sh to find campaigns, reported campaigns and bots are found in (Campaigns/CampaignDetection/ParsedData/campaigns.csv)
 
