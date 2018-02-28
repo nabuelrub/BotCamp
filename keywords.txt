@@ -1,4 +1,2 @@
-donald
-russia
-election
-
+write your keywords here
+each line contains one keyword
