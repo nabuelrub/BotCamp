@@ -12,7 +12,8 @@ Add them to the following files:
 
 There are several dependencies:
 * [Numpy](http://www.numpy.org/)
-* [NLTK](https://spacy.io/) and [Words Corpora] (http://www.nltk.org/nltk_data/)
+* [NLTK](https://spacy.io/)
+* [Words Corpora] (http://www.nltk.org/nltk_data/)
 * [Pybloom](https://pypi.python.org/pypi/pybloom)
 * [IGraph](https://pypi.python.org/pypi/python-igraph)
 * [Scikit-learn](https://pypi.python.org/pypi/scikit-learn)
