@@ -30,7 +30,6 @@ input_file_name = sys.argv[1] +'.txt'
 try:
 	input_file = open(input_file_name,'r')
 except:
-	print "No bots found for this topic to report"
 	sys.exit() 
 output_file_name = sys.argv[2] + '.txt'
 output_file = open(output_file_name,'w')
